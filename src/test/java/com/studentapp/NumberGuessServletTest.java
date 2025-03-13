@@ -19,22 +19,22 @@ public class NumberGuessServletTest {
     public void setUp() throws Exception {
         servlet = new NumberGuessServlet();
         servlet.init();
-        request = Mockito.mock(HttpServletRequest.class);
-        response = Mockito.mock(HttpServletResponse.class);
+        request = mockito.mock(HttpServletRequest.class);
+        response = mockito.mock(HttpServletResponse.class);
         responseWriter = new StringWriter();
-        Mockito.when(response.getWriter()).thenReturn(new PrintWriter(responseWriter));
+        mockito.when(response.getWriter()).thenReturn(new PrintWriter(responseWriter));
     }
 
     @Test
     public void testGuessTooLow() throws Exception {
-        Mockito.when(request.getParameter("guess")).thenReturn("1");
+        mockito.when(request.getParameter("guess")).thenReturn("1");
         servlet.doPost(request, response);
         assertTrue(responseWriter.toString().contains("Your guess is too low"));
     }
 
     @Test
     public void testGuessTooHigh() throws Exception {
-        Mockito.when(request.getParameter("guess")).thenReturn("100");
+        mockito.when(request.getParameter("guess")).thenReturn("100");
         servlet.doPost(request, response);
         assertTrue(responseWriter.toString().contains("Your guess is too high"));
     }
@@ -42,7 +42,7 @@ public class NumberGuessServletTest {
     @Test
     public void testCorrectGuess() throws Exception {
         int correctGuess = servlet.getTargetNumber();
-        Mockito.when(request.getParameter("guess")).thenReturn(String.valueOf(correctGuess));
+        mockito.when(request.getParameter("guess")).thenReturn(String.valueOf(correctGuess));
         servlet.doPost(request, response);
         assertTrue(responseWriter.toString().contains("Congratulations! You guessed the number!"));
     }
