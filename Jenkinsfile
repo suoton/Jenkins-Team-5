@@ -1,19 +1,25 @@
 pipeline {
     agent any
     stages {
-        stage('...clean...') {
+        stage('Build') {
             steps {
-                sh 'mvn clean'
+                sh 'mvn clean package'
             }
         }
-        stage('...test...') {
+        stage('Test') {
             steps {
                 sh 'mvn test'
             }
+            post{
+                success{
+                    echo "Archiving the Artifacts"
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
+            }
         }
-        stage('...package...') { 
-            steps {
-                sh 'mvn package' 
+        stage ('Deploy to tomcat server') {
+            steps{
+                deploy adapters: [tomcat7(credentialsId: 'tomcat', path: '', url: 'http://13.51.150.96:8080/')], contextPath: null, war: '**/*.war'
             }
         }
     }
